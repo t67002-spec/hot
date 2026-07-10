@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>หมากฮอสออนไลน์ | Thai Checkers Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-dark">
+
+  <!-- Ambient wood-grain backdrop -->
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <button id="themeToggle" class="theme-toggle" title="สลับธีมสว่าง/มืด" aria-label="Toggle theme">
+    <span class="theme-toggle__icon">☾</span>
+  </button>
+
+  <!-- ============ SCREEN: MAIN MENU ============ -->
+  <main id="screen-menu" class="screen screen--menu is-active">
+    <div class="box-lid">
+      <p class="eyebrow">กระดานไม้ · เกมดั้งเดิม · เล่นได้ทุกที่</p>
+      <h1 class="game-title">หมากฮอส<span class="game-title__accent">ออนไลน์</span></h1>
+      <p class="game-subtitle">Thai Checkers — เลือกคู่แข่งของคุณ แล้วเริ่มวางหมากได้เลย</p>
+
+      <section class="menu-block">
+        <h2 class="menu-block__label"><span class="menu-block__num">01</span> เลือกคู่แข่ง</h2>
+        <div class="tile-group" id="modeGroup">
+          <button class="tile" data-mode="ai">
+            <span class="tile__icon">♟</span>
+            <span class="tile__title">เล่นกับบอท</span>
+            <span class="tile__desc">ท้าทาย AI ระดับกลาง–ยาก</span>
+          </button>
+          <button class="tile" data-mode="local">
+            <span class="tile__icon">⚔</span>
+            <span class="tile__title">เล่นสองคน (เครื่องเดียว)</span>
+            <span class="tile__desc">สลับตากันเดินบนหน้าจอเดียว</span>
+          </button>
+          <button class="tile" data-mode="online">
+            <span class="tile__icon">🌐</span>
+            <span class="tile__title">เล่นออนไลน์</span>
+            <span class="tile__desc">สร้างห้อง/เข้าร่วมด้วยรหัสห้อง</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="menu-block">
+        <h2 class="menu-block__label"><span class="menu-block__num">02</span> เลือกกติกา</h2>
+        <div class="tile-group tile-group--pair" id="ruleGroup">
+          <button class="tile tile--rule" data-rule="thai">
+            <span class="tile__title">กฎหมากฮอสไทย</span>
+            <span class="tile__desc">8 ตัว/ฝั่ง · ฮอสบินได้ไกล</span>
+          </button>
+          <button class="tile tile--rule" data-rule="international">
+            <span class="tile__title">กฎสากล</span>
+            <span class="tile__desc">12 ตัว/ฝั่ง · ฮอสเดินทีละช่อง</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="menu-block" id="nameBlock">
+        <h2 class="menu-block__label"><span class="menu-block__num">03</span> ชื่อผู้เล่น</h2>
+        <input type="text" id="playerName" class="text-input" placeholder="พิมพ์ชื่อของคุณ" maxlength="20">
+      </section>
+
+      <!-- Online-only room controls -->
+      <section class="menu-block is-hidden" id="onlineBlock">
+        <h2 class="menu-block__label"><span class="menu-block__num">04</span> ห้องออนไลน์</h2>
+        <div class="online-actions">
+          <button id="btnCreateRoom" class="btn btn--ghost">สร้างห้องใหม่</button>
+          <div class="join-row">
+            <input type="text" id="roomCodeInput" class="text-input text-input--code" placeholder="รหัสห้อง" maxlength="6">
+            <button id="btnJoinRoom" class="btn btn--ghost">เข้าร่วมห้อง</button>
+          </div>
+          <p id="onlineStatus" class="online-status"></p>
+        </div>
+      </section>
+
+      <button id="btnStart" class="btn btn--primary btn--start" disabled>เริ่มเกม</button>
+      <p id="menuError" class="menu-error"></p>
+    </div>
+  </main>
+
+  <!-- ============ SCREEN: GAME ============ -->
+  <main id="screen-game" class="screen screen--game">
+    <header class="game-hud">
+      <button id="btnBack" class="icon-btn" title="กลับเมนู">←</button>
+      <div class="turn-banner">
+        <span class="turn-banner__dot" id="turnDot"></span>
+        <span id="turnLabel">ตาของ: แดง</span>
+      </div>
+      <div class="room-badge is-hidden" id="roomBadge">ห้อง: <strong id="roomCodeLabel">—</strong></div>
+    </header>
+
+    <div class="game-layout">
+      <aside class="side-panel side-panel--left">
+        <div class="player-card" id="cardPlayerTop">
+          <span class="player-card__label">ผู้เล่น</span>
+          <span class="player-card__name" id="nameTop">—</span>
+          <span class="player-card__score">กินแล้ว <b id="capturedByTop">0</b></span>
+        </div>
+      </aside>
+
+      <div class="board-wrap">
+        <div id="board" class="board" role="grid" aria-label="กระดานหมากฮอส"></div>
+        <div id="promoRing" class="promo-flash" aria-hidden="true"></div>
+      </div>
+
+      <aside class="side-panel side-panel--right">
+        <div class="player-card" id="cardPlayerBottom">
+          <span class="player-card__label">ผู้เล่น</span>
+          <span class="player-card__name" id="nameBottom">—</span>
+          <span class="player-card__score">กินแล้ว <b id="capturedByBottom">0</b></span>
+        </div>
+        <button id="btnNewGame" class="btn btn--ghost btn--small">เริ่มใหม่</button>
+        <p class="rule-tag" id="ruleTag">กฎ: —</p>
+      </aside>
+    </div>
+  </main>
+
+  <!-- ============ END-GAME MODAL ============ -->
+  <div id="modalResult" class="modal-overlay is-hidden">
+    <div class="modal-card">
+      <p class="modal-eyebrow">จบเกม</p>
+      <h2 id="modalWinnerText" class="modal-title">—</h2>
+      <p id="modalSubText" class="modal-sub"></p>
+      <div class="modal-actions">
+        <button id="btnPlayAgain" class="btn btn--primary">เล่นอีกครั้ง</button>
+        <button id="btnBackMenu2" class="btn btn--ghost">กลับเมนูหลัก</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="database.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
