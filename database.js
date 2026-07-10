@@ -22,7 +22,7 @@
 
 const GAS_CONFIG = {
   // 👉 REPLACE with your own Apps Script Web App URL after deploying Code.gs
-  WEB_APP_URL: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec'
+  WEB_APP_URL: 'https://script.google.com/macros/s/1lhw7Mdp3CfDCnT_7i50pwL4dkOT71M9yX0ZQtG-q7D8/exec'
 };
 
 async function gasGet(params) {
